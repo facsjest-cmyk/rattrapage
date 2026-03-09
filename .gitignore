@@ -1,0 +1,38 @@
+.DS_Store
+Thumbs.db
+
+# Environment / secrets
+.env
+.env.*
+
+# Laravel
+rattrapage/vendor/
+rattrapage/node_modules/
+rattrapage/public/hot
+rattrapage/public/storage
+rattrapage/storage/*.key
+rattrapage/storage/logs/
+rattrapage/storage/framework/cache/
+rattrapage/storage/framework/sessions/
+rattrapage/storage/framework/views/
+rattrapage/bootstrap/cache/
+
+# Vite / build
+rattrapage/.vite/
+rattrapage/npm-debug.log*
+rattrapage/yarn-debug.log*
+rattrapage/yarn-error.log*
+rattrapage/pnpm-debug.log*
+rattrapage/.npmrc
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Local tooling
+.windsurf/
+
+# Optional large/local artifacts
+flat-design-arabesque-pattern/
+planing_test1.csv
