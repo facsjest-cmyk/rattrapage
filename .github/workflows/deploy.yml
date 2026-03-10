@@ -1,6 +1,5 @@
 name: Deploy Rattrapage App
 
-# Déclenchement à chaque push sur la branche main
 on:
   push:
     branches:
@@ -9,31 +8,26 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    # 1️⃣ Récupérer le code depuis GitHub
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 2️⃣ Copier la clé privée du secret GitHub dans le runner
     - name: Copy deploy key
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
         chmod 600 ~/.ssh/id_ed25519
 
-    # 3️⃣ Ajouter ton serveur dans known_hosts pour éviter les prompts interactifs
-    - name: Add server to known hosts
-      run: ssh-keyscan 10.2.22.210 >> ~/.ssh/known_hosts
+    - name: Add GitHub to known hosts
+      run: ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
 
-    # 4️⃣ Déployer sur le serveur
     - name: Deploy to server
       run: |
-        ssh -i ~/.ssh/id_ed25519 deployer_rat@10.2.22.210 "
-          cd /var/www/rattrapage-app/rattrapage && \
-          git pull origin main && \
-          composer install --no-dev --prefer-dist --optimize-autoloader && \
-          php artisan migrate --force && \
-          php artisan config:cache && \
-          php artisan cache:clear
-        "
+        ssh -i ~/.ssh/id_ed25519 -p 22 tali@10.2.22.210 \
+        "cd /var/www/rattrapage-app/rattrapage \
+        && git reset --hard HEAD \
+        && git pull origin main \
+        && composer install --no-dev --optimize-autoloader \
+        && php artisan migrate --force \
+        && php artisan config:cache \
+        && php artisan cache:clear"
