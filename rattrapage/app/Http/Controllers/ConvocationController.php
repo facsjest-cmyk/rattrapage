@@ -87,7 +87,7 @@ class ConvocationController extends Controller
                 'etudiant' => $etudiant,
                 'examens' => $examens,
                 'qr_svg' => $qrSvg,
-            ]);
+            ])->setPaper('a4', 'landscape');
         } catch (\Throwable $e) {
             return redirect('/convocation')->with('pdf_error', __('messages.convocation.pdf.error'));
         }

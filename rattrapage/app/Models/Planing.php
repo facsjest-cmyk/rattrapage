@@ -24,6 +24,7 @@ class Planing extends Model
         'prof',
         'module',
         'salle',
+        'num_exam',
         'site',
         'date',
         'horaire',
@@ -64,7 +65,19 @@ class Planing extends Model
 
     public function getSemestreAttribute(): ?string
     {
-        return $this->cod_elp;
+        $code = $this->cod_elp;
+
+        if ($code === null) {
+            return null;
+        }
+
+        $code = (string) $code;
+
+        if (strlen($code) >= 5) {
+            return substr($code, 4, 1);
+        }
+
+        return $code;
     }
 
     public function getGroupeAttribute(): ?string

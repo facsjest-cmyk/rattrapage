@@ -11,7 +11,7 @@ class OpsExportPdfsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_export_page_lists_groups_as_links(): void
+    public function test_liste_etudiants_page_lists_groups_as_links(): void
     {
         $etudiant = Etudiant::create([
             'cod_etu' => 'E7000',
@@ -33,13 +33,20 @@ class OpsExportPdfsTest extends TestCase
             'site' => 'Campus',
         ]);
 
-        $response = $this->get('/ops/export-pdfs');
+        $response = $this->get('/ops/liste-etudiants');
 
         $response->assertOk();
         $response->assertSee('/ops/presence-pdf', false);
         $response->assertSee('2026-03-01', false);
         $response->assertSee('08:30:00', false);
         $response->assertSee('A1', false);
+    }
+
+    public function test_export_pdfs_redirects_to_liste_etudiants(): void
+    {
+        $response = $this->get('/ops/export-pdfs');
+
+        $response->assertRedirect('/ops/liste-etudiants');
     }
 
     public function test_presence_pdf_downloads_a_pdf_for_group(): void

@@ -6,6 +6,8 @@
 
         <title>{{ __('messages.convocation.title') }}</title>
 
+        <link rel="icon" href="{{ asset('favicon.ico') }}" />
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen text-[#1b1b18]">
@@ -24,9 +26,9 @@
                 <div class="absolute inset-0 bg-gradient-to-b from-[#cfe9ff]/15 via-transparent to-[#cfe9ff]/30"></div>
             </div>
 
-            <main class="relative w-full max-w-7xl bg-white/95 backdrop-blur shadow-lg ring-1 ring-black/10 rounded-2xl p-6 sm:p-8">
+            <main class="relative w-full max-w-8xl bg-white/95 backdrop-blur shadow-lg ring-1 ring-black/10 rounded-2xl p-6 sm:p-8">
             <header class="mb-6 flex items-center justify-between gap-4">
-                <h1 class="text-xl font-semibold">{{ __('messages.convocation.heading') }}</h1>
+                <img src="{{ asset('assets/brand/logo.png') }}" alt="" class="h-14 sm:h-16 w-auto" />
 
                 <form method="POST" action="/logout" class="shrink-0">
                     @csrf
@@ -43,27 +45,29 @@
             @endif
 
             <section class="mb-6 bg-white shadow-sm ring-1 ring-black/5 rounded-lg p-6">
-                <h2 class="text-sm font-semibold uppercase tracking-wide text-[#706f6c] mb-4">{{ __('messages.convocation.sections.student') }}</h2>
+                <div class="w-full max-w-3xl">
+                    <h2 class="text-sm font-semibold uppercase tracking-wide text-[#706f6c] mb-4">{{ __('messages.convocation.sections.student') }}</h2>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.nom') }}</div>
-                        <div class="font-medium">{{ $etudiant->nom }}</div>
-                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.nom') }}</div>
+                            <div class="font-medium">{{ $etudiant->nom }}</div>
+                        </div>
 
-                    <div>
-                        <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.prenom') }}</div>
-                        <div class="font-medium">{{ $etudiant->prenom }}</div>
-                    </div>
+                        <div>
+                            <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.prenom') }}</div>
+                            <div class="font-medium">{{ $etudiant->prenom }}</div>
+                        </div>
 
-                    <div>
-                        <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.code_apogee') }}</div>
-                        <div class="font-medium">{{ $etudiant->cod_etu }}</div>
-                    </div>
+                        <div>
+                            <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.code_apogee') }}</div>
+                            <div class="font-medium">{{ $etudiant->cod_etu }}</div>
+                        </div>
 
-                    <div>
-                        <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.filiere') }}</div>
-                        <div class="font-medium">{{ $etudiant->filiere }}</div>
+                        <div>
+                            <div class="text-xs text-[#706f6c]">{{ __('messages.convocation.fields.filiere') }}</div>
+                            <div class="font-medium">{{ $etudiant->filiere }}</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -97,6 +101,7 @@
                                     <th scope="col" class="py-2 px-3 text-start font-medium whitespace-nowrap min-w-[120px]">{{ __('messages.convocation.table.date') }}</th>
                                     <th scope="col" class="py-2 px-3 text-start font-medium whitespace-nowrap min-w-[110px]">{{ __('messages.convocation.table.horaire') }}</th>
                                     <th scope="col" class="py-2 px-3 text-start font-medium whitespace-nowrap min-w-[160px]">Salle/Amphi</th>
+                                    <th scope="col" class="py-2 px-3 text-start font-medium whitespace-nowrap min-w-[90px]">Place</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,6 +119,9 @@
                                         </td>
                                         <td class="py-3 px-3 font-semibold whitespace-nowrap min-w-[160px]">
                                             {{ $examen->salle }}
+                                        </td>
+                                        <td class="py-3 px-3 font-semibold whitespace-nowrap min-w-[90px]">
+                                            {{ $examen->num_exam }}
                                         </td>
                                     </tr>
                                 @endforeach

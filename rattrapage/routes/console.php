@@ -97,13 +97,15 @@ Artisan::command('ops:import-sql {--planing=} {--etudiants=} {--examens=} {--rep
     return 0;
 })->purpose('Import SQL file for planing with minimal validation');
 
-Artisan::command('ops:import-csv {--planing=} {--report=}', function () {
+Artisan::command('ops:import-csv {--planing=} {--report=} {--fresh}', function () {
     $planingPath = (string) ($this->option('planing') ?? '');
 
     $reportPath = (string) ($this->option('report') ?? '');
     if ($reportPath === '') {
         $reportPath = storage_path('logs/import-report-'.now()->format('Ymd-His').'-'.Str::random(6).'.txt');
     }
+
+    $fresh = (bool) $this->option('fresh');
 
     if ($planingPath === '') {
         $this->error('Missing required option: --planing');
@@ -238,6 +240,7 @@ Artisan::command('ops:import-csv {--planing=} {--report=}', function () {
             'prof', 'PROF' => 'prof',
             'module', 'MODULE' => 'module',
             'salle', 'SALLE' => 'salle',
+            'NumExam', 'NUMEXAM', 'NUM_EXAM', 'num_exam' => 'num_exam',
             'site', 'SITE' => 'site',
             'date', 'DATE' => 'date',
             'horaire', 'HORAIRE' => 'horaire',
@@ -264,6 +267,12 @@ Artisan::command('ops:import-csv {--planing=} {--report=}', function () {
     $rowsUpserted = 0;
 
     try {
+        if ($fresh) {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+            DB::table('planing')->truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        }
+
         DB::transaction(function () use ($planingPath, $reportPath, $excelSerialToDate, $normalizeHoraire, $mapHeaderToColumn, $normalizeCodTre, $toUtf8, &$errors, &$rowsProcessed, &$rowsUpserted): void {
             $handle = fopen($planingPath, 'r');
             if ($handle === false) {
@@ -328,6 +337,7 @@ Artisan::command('ops:import-csv {--planing=} {--report=}', function () {
                     'prof' => isset($row['prof']) ? trim((string) $row['prof']) : null,
                     'module' => isset($row['module']) ? trim((string) $row['module']) : null,
                     'salle' => isset($row['salle']) ? trim((string) $row['salle']) : null,
+                    'num_exam' => isset($row['num_exam']) ? trim((string) $row['num_exam']) : null,
                     'site' => isset($row['site']) ? trim((string) $row['site']) : null,
                     'date' => isset($row['date']) ? $excelSerialToDate($row['date']) : null,
                     'horaire' => isset($row['horaire']) ? $normalizeHoraire($row['horaire']) : null,
@@ -342,7 +352,7 @@ Artisan::command('ops:import-csv {--planing=} {--report=}', function () {
                     DB::table('planing')->upsert(
                         $batch,
                         ['cod_etu', 'mod_groupe', 'cod_tre'],
-                        ['lib_nom_pat_ind', 'date_nai_ind', 'lib_pr1_ind', 'cod_elp', 'filiere', 'cod_ext_gpe', 'prof', 'module', 'salle', 'site', 'date', 'horaire', 'updated_at']
+                        ['lib_nom_pat_ind', 'date_nai_ind', 'lib_pr1_ind', 'cod_elp', 'filiere', 'cod_ext_gpe', 'prof', 'module', 'salle', 'num_exam', 'site', 'date', 'horaire', 'updated_at']
                     );
                     $rowsUpserted += count($batch);
                     $batch = [];
@@ -355,7 +365,7 @@ Artisan::command('ops:import-csv {--planing=} {--report=}', function () {
                 DB::table('planing')->upsert(
                     $batch,
                     ['cod_etu', 'mod_groupe', 'cod_tre'],
-                    ['lib_nom_pat_ind', 'date_nai_ind', 'lib_pr1_ind', 'cod_elp', 'filiere', 'cod_ext_gpe', 'prof', 'module', 'salle', 'site', 'date', 'horaire', 'updated_at']
+                    ['lib_nom_pat_ind', 'date_nai_ind', 'lib_pr1_ind', 'cod_elp', 'filiere', 'cod_ext_gpe', 'prof', 'module', 'salle', 'num_exam', 'site', 'date', 'horaire', 'updated_at']
                 );
                 $rowsUpserted += count($batch);
             }

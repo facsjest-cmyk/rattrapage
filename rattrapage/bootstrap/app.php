@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'auth.etudiant' => \App\Http\Middleware\AuthEtudiant::class,
+            'auth.ops' => \App\Http\Middleware\AuthOps::class,
             'throttle.login' => \App\Http\Middleware\ThrottleLogin::class,
         ]);
     })

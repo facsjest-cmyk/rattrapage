@@ -6,9 +6,15 @@
 
         <title>{{ __('messages.login.title') }}</title>
 
+        <link rel="icon" href="{{ asset('favicon.ico') }}" />
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen text-[#1b1b18]">
+        <a href="{{ url('/ops/login') }}" class="fixed top-4 end-4 z-50 inline-flex items-center justify-center opacity-40 transition hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#1b02a4]/25 rounded-full" aria-label="Connexion admin">
+            <img src="{{ asset('assets/brand/logo-fsjest.png') }}" alt="" class="h-4 w-4" />
+        </a>
+
         <div class="min-h-screen relative isolate flex items-center justify-center p-6">
             <div class="absolute inset-0 -z-10">
                 <img
