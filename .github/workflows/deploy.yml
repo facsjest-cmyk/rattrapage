@@ -25,4 +25,4 @@ jobs:
 
     - name: Deploy to server
       run: |
-        ssh -p 22 deployer_rat@<10.2.22.210> "cd /var/www/rattrapage-app/rattrapage && git pull origin main && composer install --no-dev && php artisan migrate --force && php artisan config:cache && php artisan cache:clear"
+        ssh -p 22 deployer_rat@10.2.22.210 "cd /var/www/rattrapage-app/rattrapage && git pull origin main && composer install --no-dev && php artisan migrate --force && php artisan config:cache && php artisan cache:clear"
