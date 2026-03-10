@@ -1,0 +1,28 @@
+name: Deploy Rattrapage App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Copy deploy key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+
+    - name: Add GitHub to known hosts
+      run: |
+        ssh-keyscan -p 443 ssh.github.com >> ~/.ssh/known_hosts
+
+    - name: Deploy to server
+      run: |
+        ssh -p 22 deployer_rat@<10.2.22.210> "cd /var/www/rattrapage-app/rattrapage && git pull origin main && composer install --no-dev && php artisan migrate --force && php artisan config:cache && php artisan cache:clear"
