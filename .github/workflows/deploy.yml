@@ -16,7 +16,8 @@ jobs:
       - name: Deploy application
         run: |
           cd /var/www/rattrapage-app/rattrapage
-          git pull origin main
+          git fetch origin
+          git reset --hard origin/main
           composer install --no-dev --optimize-autoloader
           php artisan migrate --force
           php artisan config:cache
