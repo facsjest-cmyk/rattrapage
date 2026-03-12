@@ -16,9 +16,27 @@ jobs:
       - name: Deploy application
         run: |
           cd /var/www/rattrapage-app/rattrapage
+
+          echo "Updating code..."
           git fetch origin
           git reset --hard origin/main
+
+          echo "Installing PHP dependencies..."
           composer install --no-dev --optimize-autoloader
+
+          echo "Installing Node dependencies..."
+          npm install
+
+          echo "Building frontend assets..."
+          npm run build
+
+          echo "Running database migrations..."
           php artisan migrate --force
+
+          echo "Clearing caches..."
+          php artisan optimize:clear
+
+          echo "Rebuilding Laravel caches..."
           php artisan config:cache
-          php artisan cache:clear
+          php artisan route:cache
+          php artisan view:cache
